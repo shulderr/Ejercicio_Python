@@ -76,19 +76,42 @@ def ver_registros():
     input()
 
 
+def filtro():
+    print("----- Como Desea filtrar Para Enviar Los Correos -----")
+    print(" 1-> Mayores De 30 Años",
+          "\n 2-> Menores De 30 Años")
+    opc = input("Digite Una Opcion")
+    return opc
+
+
 def envio_correo():
     query = "select Nombre,Edad,Correo from Registro;"
     conx = conexion()
     ver_cursor = conx.cursor()
     ver_cursor.execute(query)
     registro = ver_cursor.fetchone()
+    opc = filtro()
     while registro:
-        print(registro)
-        if registro[1] >= 18:
+        if opc < 30:
+            print(registro)
             nombre = registro[0]
             edad = registro[1]
             correo = registro[2]
-            mensaje = f"Hola {nombre}, Este correo te llega por que eres mayor de edad"
+            mensaje = f"Hola {nombre}, Este correo te llega por que eres menor de 30 Años"
+            asunto = "Prueba Correo"
+            mensaje = 'Subject: {}\n\n{}'.format(asunto, mensaje)
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login('joungkingz@gmail.com', 'onlyswedish')
+            server.sendmail('joungkingz@gmail.com', correo, mensaje)
+            server.quit()
+            print("Correo Enviado Exitosamente")
+        elif opc >= 30:
+            print(registro)
+            nombre = registro[0]
+            edad = registro[1]
+            correo = registro[2]
+            mensaje = f"Hola {nombre}, Este correo te llega por que eres Mayor de 30 Años"
             asunto = "Prueba Correo"
             mensaje = 'Subject: {}\n\n{}'.format(asunto, mensaje)
             server = smtplib.SMTP('smtp.gmail.com', 587)
