@@ -1,12 +1,13 @@
 import pyodbc
+import smtplib
 
 
 def menu():
     print("--------- Menu ---------")
     print(" 1-> Agregar Nuevo Registro",
-          "\n 4-> Eliminar Registro",
-          "\n 2-> Ver Registros",
-          "\n 3-> Enviar Correos",
+          "\n 2-> Eliminar Registro",
+          "\n 3-> Ver Registros",
+          "\n 4-> Enviar Correos",
           "\n 5-> Salir")
     opc = int(input("Digite Una Opcion: "))
     return opc
@@ -75,6 +76,33 @@ def ver_registros():
     input()
 
 
+def envio_correo():
+    query = "select Nombre,Edad,Correo from Registro;"
+    conx = conexion()
+    ver_cursor = conx.cursor()
+    ver_cursor.execute(query)
+    registro = ver_cursor.fetchone()
+    while registro:
+        print(registro)
+        if registro[1] >= 18:
+            nombre = registro[0]
+            edad = registro[1]
+            correo = registro[2]
+            mensaje = f"Hola {nombre}, Este correo te llega por que eres mayor de edad"
+            asunto = "Prueba Correo"
+            mensaje = 'Subject: {}\n\n{}'.format(asunto, mensaje)
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login('joungkingz@gmail.com', 'onlyswedish')
+            server.sendmail('joungkingz@gmail.com', correo, mensaje)
+            server.quit()
+            print("Correo Enviado Exitosamente")
+        registro = ver_cursor.fetchone()
+    ver_cursor.close()
+    conx.close()
+    input()
+
+
 while True:
     opcion = menu()
     if opcion == 1:
@@ -83,6 +111,8 @@ while True:
         eliminar_registro()
     elif opcion == 3:
         ver_registros()
+    elif opcion == 4:
+        envio_correo()
     elif opcion == 5:
         print("Programa Finalizado")
         break
