@@ -24,12 +24,12 @@ def conexion():
 
 def consulta_agregar():
     nombre = input("Ingrese El Nombre: ")
-    cedula = input(f"Ingrese La Cedula De {nombre}")
-    correo = input(f"Ingrese El Correo De {nombre}")
-    edad = input(f"Ingrese La Edad De {nombre}")
-    ciudad = input(f"Ingrese La ciudad Donde Reside {nombre}")
-    producto = input(f"Ingrese El Producto Comprado Por {nombre}")
-    fecha_venta = input("Ingrese La Fecha De Venta Separada Por '/'")
+    cedula = input(f"Ingrese La Cedula De {nombre}: ")
+    correo = input(f"Ingrese El Correo De {nombre}: ")
+    edad = input(f"Ingrese La Edad De {nombre}: ")
+    ciudad = input(f"Ingrese La ciudad Donde Reside {nombre}: ")
+    producto = input(f"Ingrese El Producto Comprado Por {nombre}: ")
+    fecha_venta = input("Ingrese La Fecha De Venta Separada Por '/': ")
     query = "insert into Registro(Nombre, Cedula, Correo, Edad, Ciudad, Producto, Fecha_Venta) values ('" + nombre + "','" + cedula + "','" + correo + "','" + edad + "','" + ciudad + "','" + producto + "','" + fecha_venta + "') "
     return query
 
@@ -76,7 +76,7 @@ def ver_registros():
     input()
 
 
-def filtro():
+def menu_filtro():
     print("----- Como Desea filtrar Para Enviar Los Correos -----")
     print(" 1-> Mayores De 30 Años",
           "\n 2-> Menores De 30 Años")
@@ -84,46 +84,68 @@ def filtro():
     return opc
 
 
-def envio_correo():
-    query = "select Nombre,Edad,Correo from Registro;"
+def datos_clientes():
+    datos = []
     conx = conexion()
+    query = "select Nombre,Edad,Correo from Registro;"
     ver_cursor = conx.cursor()
     ver_cursor.execute(query)
     registro = ver_cursor.fetchone()
-    opc = filtro()
     while registro:
-        if opc < 30:
-            print(registro)
-            nombre = registro[0]
-            edad = registro[1]
-            correo = registro[2]
-            mensaje = f"Hola {nombre}, Este correo te llega por que eres menor de 30 Años"
-            asunto = "Prueba Correo"
-            mensaje = 'Subject: {}\n\n{}'.format(asunto, mensaje)
-            server = smtplib.SMTP('smtp.gmail.com', 587)
-            server.starttls()
-            server.login('joungkingz@gmail.com', 'onlyswedish')
-            server.sendmail('joungkingz@gmail.com', correo, mensaje)
-            server.quit()
-            print("Correo Enviado Exitosamente")
-        elif opc >= 30:
-            print(registro)
-            nombre = registro[0]
-            edad = registro[1]
-            correo = registro[2]
-            mensaje = f"Hola {nombre}, Este correo te llega por que eres Mayor de 30 Años"
-            asunto = "Prueba Correo"
-            mensaje = 'Subject: {}\n\n{}'.format(asunto, mensaje)
-            server = smtplib.SMTP('smtp.gmail.com', 587)
-            server.starttls()
-            server.login('joungkingz@gmail.com', 'onlyswedish')
-            server.sendmail('joungkingz@gmail.com', correo, mensaje)
-            server.quit()
-            print("Correo Enviado Exitosamente")
+        lista = list(registro)
+        datos.append(lista)
         registro = ver_cursor.fetchone()
-    ver_cursor.close()
     conx.close()
-    input()
+    return datos
+
+
+def filtro():
+    clientes = []
+    opc = menu_filtro()
+    registros = datos_clientes()
+    if opc == 1:
+        opc = 29
+        for n in registros:
+            datos = n
+            if datos[1] <= opc:
+                print(n)
+                clientes.append(n)
+    elif opc == 2:
+        opc = 30
+        for n in registros:
+            datos = n
+            if datos[1] >= opc:
+                print(n)
+                clientes.append(n)
+    else:
+        print("Se Ha digitado Una Opcion No Valida")
+    return clientes
+
+
+def envio_correo():
+    edades = ["Menor", "Mayor"]
+    variable = ""
+    registros = filtro()
+    for n in registros:
+        cliente = n
+        if cliente[1] <= 29:
+            variable = edades[0]
+        elif cliente[1] >= 30:
+            variable = edades[1]
+        nombre = cliente[0]
+        edad = cliente[1]
+        mail = cliente[2]
+        mensaje = f"Hola {nombre}, Este correo te llega por que eres {variable} de 30 anios"
+        asunto = "Prueba Correo"
+        mensaje = 'Subject: {}\n\n{}'.format(asunto, mensaje)
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login('joungkingz@gmail.com', 'onlyswedish')
+        server.sendmail('joungkingz@gmail.com', mail, mensaje)
+        server.quit()
+        print("Correo Enviado Exitosamente a: ",
+              f"\n Nombre: {nombre}, Correo: {mail}, Edad: {edad}")
+        input()
 
 
 while True:
@@ -139,3 +161,5 @@ while True:
     elif opcion == 5:
         print("Programa Finalizado")
         break
+    elif opcion > 5:
+        print("Opcion Ingresada No Valida")
