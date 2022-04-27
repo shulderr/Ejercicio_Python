@@ -82,11 +82,19 @@ def ver_registros():
 
 
 def menu_filtro():
+    opciones = []
     print("----- Como Desea filtrar Para Enviar Los Correos -----")
     print(" 1-> Mayores De 30 Años",
-          "\n 2-> Menores De 30 Años")
+          "\n 2-> Menores De 30 Años",
+          "\n 3-> Digitar Rango")
     opc = int(input("Digite Una Opcion: "))
-    return opc
+    opciones.append(opc)
+    if opc == 3:
+        var1 = int(input("Digite El Primer Valor: "))
+        opciones.append(var1)
+        var2 = int(input("Digite El Segundo Valor: "))
+        opciones.append(var2)
+    return opciones
 
 
 def datos_clientes():
@@ -107,21 +115,30 @@ def datos_clientes():
 def filtro():
     clientes = []
     opc = menu_filtro()
+    rango0 = opc[0]
+    rango1 = opc[1]
+    rango2 = opc[2]
     registros = datos_clientes()
-    if opc == 1:
-        opc = 30
+    if rango0 == 1:
+        var = 30
         for n in registros:
             datos = n
-            if datos[1] >= opc:
+            if datos[1] >= var:
                 print(n)
                 clientes.append(n)
-    elif opc == 2:
-        opc = 29
+    elif rango0 == 2:
+        var = 29
         for n in registros:
             datos = n
-            if datos[1] <= opc:
+            if datos[1] <= var:
                 print(n)
                 clientes.append(n)
+    elif rango0 == 3:
+        for n in registros:
+            datos = n
+            if datos[1] >= rango1 and datos[1] <= rango2:
+                print(n)
+                clientes.append(n)            
     else:
         print("Se Ha digitado Una Opcion No Valida")
     return clientes
