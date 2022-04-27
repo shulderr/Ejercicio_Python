@@ -5,12 +5,12 @@ import time
 
 
 def menu():
-    print("--------- Menu ---------")
-    print(" 1-> Agregar Nuevo Registro",
-          "\n 2-> Eliminar Registro",
-          "\n 3-> Ver Registros",
-          "\n 4-> Enviar Correos",
-          "\n 5-> Salir")
+    print("\033[;33m" + "--------- Menu ---------" + "\033[0;m")
+    print("\033[;33m" + "1->" + "\033[0;m" + " Agregar Nuevo Registro")
+    print("\033[;33m" + "2->" + "\033[0;m" + " Eliminar Registro")
+    print("\033[;33m" + "3->" + "\033[0;m" + " Ver Registros")
+    print("\033[;33m" + "4->" + "\033[0;m" + " Enviar Correos")
+    print("\033[;33m" + "5->" + "\033[0;m" + " Salir")
     opc = int(input("Digite Una Opcion: "))
     return opc
 
@@ -18,7 +18,7 @@ def menu():
 def conexion():
     try:
         connection = pyodbc.connect('DRIVER={SQL Server};SERVER=GERALT;DATABASE=python;Trusted_Connection=yes;')
-        print("Conexion Exitosa")
+        print("\033[;32m" + "Conexion Exitosa" + "\033[0;m")
         return connection
     except Exception as ex:
         print(f"Error al Conectar Con La Base De Datos {ex}")
@@ -186,10 +186,10 @@ def bucle():
         elif opcion == 4:
             envio_correo()
         elif opcion == 5:
-            print("Programa Finalizado")
+            print("\033[;32m" + "Programa Finalizado" + "\033[0;m")
             break
         elif opcion > 5:
-            print("Opcion Ingresada No Valida")
+            print("\033[;31m" + "Opcion Ingresada No Valida" + "\033[0;m")
 
 
 bucle()
