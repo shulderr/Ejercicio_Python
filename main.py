@@ -1,5 +1,6 @@
 import pyodbc
 import smtplib
+import time
 
 
 def menu():
@@ -84,14 +85,14 @@ def menu_filtro():
     print("----- Como Desea filtrar Para Enviar Los Correos -----")
     print(" 1-> Mayores De 30 Años",
           "\n 2-> Menores De 30 Años")
-    opc = input("Digite Una Opcion")
+    opc = int(input("Digite Una Opcion: "))
     return opc
 
 
 def datos_clientes():
     datos = []
     conx = conexion()
-    query = "select Nombre,Edad,Correo from Registro;"
+    query = "select Nombre,Edad,Correo,Ciudad from Registro;"
     ver_cursor = conx.cursor()
     ver_cursor.execute(query)
     registro = ver_cursor.fetchone()
@@ -108,17 +109,17 @@ def filtro():
     opc = menu_filtro()
     registros = datos_clientes()
     if opc == 1:
-        opc = 29
-        for n in registros:
-            datos = n
-            if datos[1] <= opc:
-                print(n)
-                clientes.append(n)
-    elif opc == 2:
         opc = 30
         for n in registros:
             datos = n
             if datos[1] >= opc:
+                print(n)
+                clientes.append(n)
+    elif opc == 2:
+        opc = 29
+        for n in registros:
+            datos = n
+            if datos[1] <= opc:
                 print(n)
                 clientes.append(n)
     else:
@@ -136,10 +137,12 @@ def envio_correo():
             variable = edades[0]
         elif cliente[1] >= 30:
             variable = edades[1]
+        fecha = str(time.strftime("%d/%m/%Y"))
         nombre = cliente[0]
         edad = cliente[1]
         mail = cliente[2]
-        mensaje = f"Hola {nombre}, Este correo te llega por que eres {variable} de 30 anios"
+        ciudad = cliente[3]
+        mensaje = f"{ciudad}, {fecha}. \n Hola {nombre}. \n Cordial Saludo. \n Este Correo Te llega Por Que Eres {variable} de 30"
         asunto = "Prueba Correo"
         mensaje = 'Subject: {}\n\n{}'.format(asunto, mensaje)
         server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -149,7 +152,6 @@ def envio_correo():
         server.quit()
         print("Correo Enviado Exitosamente a: ",
               f"\n Nombre: {nombre}, Correo: {mail}, Edad: {edad}")
-        input()
 
 
 def bucle():
