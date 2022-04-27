@@ -63,15 +63,19 @@ def eliminar_registro():
 
 
 def ver_registros():
+    clientes = []
     query = "select * from Registro;"
     conx = conexion()
     ver_cursor = conx.cursor()
     ver_cursor.execute(query)
     registro = ver_cursor.fetchone()
     while registro:
-        print(registro)
+        lista = list(registro)
+        clientes.append(lista)
         registro = ver_cursor.fetchone()
     ver_cursor.close()
+    for n in clientes:
+        print(n)
     conx.close()
     input()
 
@@ -148,18 +152,22 @@ def envio_correo():
         input()
 
 
-while True:
-    opcion = menu()
-    if opcion == 1:
-        agregar_registro()
-    elif opcion == 2:
-        eliminar_registro()
-    elif opcion == 3:
-        ver_registros()
-    elif opcion == 4:
-        envio_correo()
-    elif opcion == 5:
-        print("Programa Finalizado")
-        break
-    elif opcion > 5:
-        print("Opcion Ingresada No Valida")
+def bucle():
+    while True:
+        opcion = menu()
+        if opcion == 1:
+            agregar_registro()
+        elif opcion == 2:
+            eliminar_registro()
+        elif opcion == 3:
+            ver_registros()
+        elif opcion == 4:
+            envio_correo()
+        elif opcion == 5:
+            print("Programa Finalizado")
+            break
+        elif opcion > 5:
+            print("Opcion Ingresada No Valida")
+
+
+bucle()
