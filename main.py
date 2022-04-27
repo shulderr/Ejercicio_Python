@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import pyodbc
 import smtplib
 import time
@@ -138,7 +139,9 @@ def filtro():
             datos = n
             if datos[1] >= rango1 and datos[1] <= rango2:
                 print(n)
-                clientes.append(n)            
+                clientes.append(n)
+        if len(clientes) == 0:
+            print("No Hay Registros Dentro Del Rango Solicitado")           
     else:
         print("Se Ha digitado Una Opcion No Valida")
     return clientes
