@@ -1,4 +1,4 @@
-from asyncio.windows_events import NULL
+from turtle import clear
 import pyodbc
 import smtplib
 import time
@@ -116,28 +116,31 @@ def datos_clientes():
 def filtro():
     clientes = []
     opc = menu_filtro()
-    rango0 = opc[0]
-    rango1 = opc[1]
-    rango2 = opc[2]
     registros = datos_clientes()
-    if rango0 == 1:
+    if opc[0] == 1:
         var = 30
         for n in registros:
             datos = n
             if datos[1] >= var:
+                datos.append(30)
+                datos.append(30)
                 print(n)
                 clientes.append(n)
-    elif rango0 == 2:
+    elif opc[0] == 2:
         var = 29
         for n in registros:
             datos = n
             if datos[1] <= var:
+                datos.append(30)
+                datos.append(30)
                 print(n)
                 clientes.append(n)
-    elif rango0 == 3:
+    elif opc[0] == 3:
         for n in registros:
             datos = n
-            if datos[1] >= rango1 and datos[1] <= rango2:
+            if datos[1] >= opc[1] and datos[1] <= opc[2]:
+                datos.append(opc[1])
+                datos.append(opc[2])
                 print(n)
                 clientes.append(n)
         if len(clientes) == 0:
@@ -148,12 +151,15 @@ def filtro():
 
 
 def envio_correo():
-    edades = ["Menor", "Mayor"]
-    variable = ""
+    edades = ["Menores De 30", "Mayores De 30"]
     registros = filtro()
     for n in registros:
         cliente = n
-        if cliente[1] <= 29:
+        rango1 = cliente[4]
+        rango2 = cliente[5]
+        if cliente[1] >= cliente[4] and cliente[1] <= cliente[5]:
+            variable = f"Entre los {rango1} y los {rango2}"
+        elif cliente[1] <= 29:
             variable = edades[0]
         elif cliente[1] >= 30:
             variable = edades[1]
@@ -162,7 +168,7 @@ def envio_correo():
         edad = cliente[1]
         mail = cliente[2]
         ciudad = cliente[3]
-        mensaje = f"{ciudad}, {fecha}. \n Hola {nombre}. \n Cordial Saludo. \n Este Correo Te llega Por Que Eres {variable} de 30"
+        mensaje = f"{ciudad}, {fecha}. \n\n Hola {nombre}. \n\n Cordial Saludo. \n\n Este Correo Te llega Por Que Estas En El Rango De Edades {variable}"
         asunto = "Prueba Correo"
         mensaje = 'Subject: {}\n\n{}'.format(asunto, mensaje)
         server = smtplib.SMTP('smtp.gmail.com', 587)
