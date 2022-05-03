@@ -1,4 +1,3 @@
-from turtle import clear
 import pyodbc
 import smtplib
 import time
@@ -50,7 +49,8 @@ def agregar_registro():
     agg_cursor.commit()
     agg_cursor.close()
     conect.close()
-    print("Registro Agregado Con Exito")
+    print("\033[;32m" + "Registro Agregado Con Exito" + "\033[0;m")
+    input("\033[;33m" + "Enter Para Continuar" + "\033[0;m") 
 
 
 def eliminar_registro():
@@ -61,7 +61,8 @@ def eliminar_registro():
     del_cursor.commit()
     del_cursor.close()
     conx.commit()
-    print("Registro Eliminado Con Exito")
+    print("\033[;32m" + "Registro Eliminado Con Exito" + "\033[0;m")
+    input("\033[;33m" + "Enter Para Continuar" + "\033[0;m") 
 
 
 def ver_registros():
@@ -79,7 +80,7 @@ def ver_registros():
     for n in clientes:
         print(n)
     conx.close()
-    input()
+    input("\033[;33m" + "Enter Para Continuar" + "\033[0;m")
 
 
 def menu_filtro():
@@ -144,9 +145,11 @@ def filtro():
                 print(n)
                 clientes.append(n)
         if len(clientes) == 0:
-            print("No Hay Registros Dentro Del Rango Solicitado")           
+            print("\033[;31m" + "No Hay Registros Dentro Del Rango Solicitado" + "\033[0;m")
+            input("\033[;33m" + "Enter Para Continuar" + "\033[0;m")           
     else:
-        print("Se Ha digitado Una Opcion No Valida")
+        print("\033[;31m" + "Se Ha digitado Una Opcion No Valida" + "\033[0;m")
+        input("\033[;33m" + "Enter Para Continuar" + "\033[0;m") 
     return clientes
 
 
@@ -178,6 +181,7 @@ def envio_correo():
         server.quit()
         print("Correo Enviado Exitosamente a: ",
               f"\n Nombre: {nombre}, Correo: {mail}, Edad: {edad}")
+    input("\033[;33m" + "Enter Para Continuar" + "\033[0;m")
 
 
 def bucle():
@@ -194,7 +198,7 @@ def bucle():
         elif opcion == 5:
             print("\033[;32m" + "Programa Finalizado" + "\033[0;m")
             break
-        elif opcion > 5:
+        elif opcion > 5 or opcion < 1:
             print("\033[;31m" + "Opcion Ingresada No Valida" + "\033[0;m")
 
 
